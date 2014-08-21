@@ -6,8 +6,8 @@ var crypto = require('crypto');
 var http = require('http');
 var path = require('path');
 
-var AWS_ACCESS_KEY = "AKIAJKVK3WIQKKCEVFZQ";
-var AWS_SECRET_KEY = "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";
+var AWS_ACCESS_KEY = "";
+var AWS_SECRET_KEY = "";
 
 exports.sign_s3 = function(req,res){
   if(req.isAuthenticated()){
