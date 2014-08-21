@@ -1,0 +1,61 @@
+<html>
+<body>
+
+<h1>Edit your account</h1>
+
+<hr />
+
+<h2>Your avatar</h2>
+<form method="POST" action="http://localhost:3000/api/user/login" Content-type = "application/json">
+    <input name="username" />
+    <input name = "password" />
+    <input type="submit" value="login" />
+</form>
+
+<input type="file" id="files"/>
+<p id="status">Please select a file</p>
+<div style="border:1px solid gray;width:300px;"  id="preview"><img src="/images/default.png" style="width:300px;" /></div>
+
+<h2>Your information</h2>
+
+<form method="POST" action="http://ehr-more.herokuapp.com/api/user/uploadPhoto">
+    <input type="hidden" id="avatar_url" name="avatar_url" value="/public/images/default.png" />
+    <hr />
+    <h2>Save changes</h2>
+
+    <input type="submit" value="Update profile" />
+</form>
+
+<a href="http://localhost:3000/api/contract"><button id = "download">download as pdf</button></a>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="/javascripts/lodash.min.js"></script>
+<script type="text/javascript" src="/javascripts/s3upload.js"></script>
+
+<script type="text/javascript">
+function s3_upload(){
+    var s3upload = new S3Upload({
+        file_dom_selector: '#files',
+        s3_sign_put_url: 'http://localhost:3000/api/sign_s3?s3_object_dest=profile',
+        onProgress: function(percent, message) {
+            $('#status').html('Upload progress: ' + percent + '% ' + message);
+        },
+        onFinishS3Put: function(public_url) {
+            $('#status').html('Upload completed. Uploaded to: '+ public_url);
+            $("#avatar_url").val(public_url);
+            $("#preview").html('<img src="'+public_url+'" style="width:300px;" />');
+        },
+        onError: function(status) {
+            $('#status').html('Upload error: ' + status);
+        }
+    });
+}
+
+$(document).ready(function() {
+    $('#files').on("change", s3_upload);
+});
+</script>
+<script type="text/javascript">   
+</script>
+</body>
+</html>
